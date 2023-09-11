@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { Statistics } from './Statistics/Statistics';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Section } from './Section/Section';
@@ -17,20 +16,19 @@ export function App() {
     }));
   };
 
-  // Крок 3: Обчислення загальної кількості відгуків та відсотка позитивних відгуків
-  const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
-  const positivePercentage =
-    totalFeedback === 0 ? 0 : Math.round((feedback.good / totalFeedback) * 100);
-
-  const feedbackOptions = ['good', 'neutral', 'bad'];
+  // Крок 3: Обчислення загальної кількості відгуків
+  const totalFeedback = Object.values(feedback).reduce(
+    (acc, value) => acc + value,
+    0
+  );
 
   return (
     <div>
       {/* Крок 4: Відображення секції для залишення відгуків */}
       <Section title="Please leave your feedback">
-        {/* Крок 5: Відображення компонента FeedbackOptions */}
+        {/* Крок 5: Відображення компонента FeedbackOptions та передача йому опцій */}
         <FeedbackOptions
-          options={feedbackOptions}
+          options={Object.keys(feedback)}
           onLeaveFeedback={handleLeaveFeedback}
         />
       </Section>
@@ -39,13 +37,15 @@ export function App() {
       {totalFeedback > 0 ? (
         /* Крок 7: Відображення секції для відображення статистики */
         <Section title="Statistics">
-          {/* Крок 8: Відображення компонента Statistics та передача йому необхідних даних */}
+          {/* Крок 8: Відображення компонента Statistics та передача йому даних */}
           <Statistics
             good={feedback.good}
             neutral={feedback.neutral}
             bad={feedback.bad}
             total={totalFeedback}
-            positivePercentage={positivePercentage}
+            positivePercentage={Math.round(
+              (feedback.good / totalFeedback) * 100
+            )}
           />
         </Section>
       ) : (
